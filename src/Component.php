@@ -5,12 +5,9 @@ declare(strict_types=1);
 namespace MyComponent;
 
 use Keboola\Component\BaseComponent;
+use Keboola\Component\JsonHelper;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
-use Symfony\Component\Serializer\Encoder\JsonDecode;
-use Symfony\Component\Serializer\Encoder\JsonEncode;
-use Symfony\Component\Serializer\Encoder\JsonEncoder;
-use Symfony\Component\Serializer\Exception\NotEncodableValueException;
 use Symfony\Component\Serializer\Exception\UnexpectedValueException;
 
 class Component extends BaseComponent
@@ -23,8 +20,7 @@ class Component extends BaseComponent
         $this->moveNotManifestFiles($inTablesFolder, $outTablesFolder);
 
         $fs = new Filesystem();
-        $jsonDecode = new JsonDecode();
-        $jsonEncode = new JsonEncode();
+        $manifestManager = $this->getManifestManager();
         /** @var Config $config */
         $config = $this->getConfig();
         $finder = new Finder();
@@ -36,15 +32,7 @@ class Component extends BaseComponent
 
             if ($config->hasTableMetadata($tableName)) {
                 // read manifest
-                try {
-                    $manifest = $jsonDecode->decode(
-                        (string) file_get_contents($manifestFile->getPathname()),
-                        JsonEncoder::FORMAT,
-                        [JsonDecode::ASSOCIATIVE => true]
-                    );
-                } catch (NotEncodableValueException $e) {
-                    throw new \RuntimeException('Failed to read manifest: ' . $e->getMessage());
-                }
+                $manifest = $manifestManager->getTableManifest($tableName);
 
                 $metadataValue = $config->getMetadataValue($tableName);
                 $metadataKey = $config->getMetadataKey();
@@ -69,10 +57,7 @@ class Component extends BaseComponent
                 );
 
                 try {
-                    file_put_contents(
-                        $outTablesFolder . '/' . $manifestFile->getBasename(),
-                        $jsonEncode->encode($manifest, JsonEncoder::FORMAT)
-                    );
+                    JsonHelper::writeFile($outTablesFolder . '/' . $manifestFile->getBasename(), $manifest);
                 } catch (UnexpectedValueException $e) {
                     throw new \RuntimeException(
                         sprintf('Failed to create manifest: %s', $e->getMessage())
