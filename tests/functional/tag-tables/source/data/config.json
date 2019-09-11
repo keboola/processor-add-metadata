@@ -1,0 +1,9 @@
+{
+    "parameters": {
+        "vendor": "keboola",
+        "app": "test-app",
+        "tables": [
+            "test-table", "table2"
+        ]
+    }
+}
