@@ -34,7 +34,7 @@ class Component extends BaseComponent
             $tableName = str_replace('.manifest', '', $manifestFile->getBasename());
             $this->getLogger()->debug(sprintf('Found manifest file: %s', $manifestFile->getBasename()));
 
-            if ($config->isTableTaggable($tableName)) {
+            if ($config->hasTableMetadata($tableName)) {
                 // read manifest
                 try {
                     $manifest = $jsonDecode->decode(
@@ -46,18 +46,27 @@ class Component extends BaseComponent
                     throw new \RuntimeException('Failed to read manifest: ' . $e->getMessage());
                 }
 
-                $tableTag = $config->getTableTag($tableName);
+                $metadataValue = $config->getMetadataValue($tableName);
+                $metadataKey = $config->getMetadataKey();
+
                 if (!array_key_exists('metadata', $manifest)) {
                     $manifest['metadata'] = [];
                 }
 
                 // add tag entry to metadata
                 $manifest['metadata'][] = [
-                    'key' => $config->getMetadataKey(),
-                    'value' => $tableTag,
+                    'key' => $metadataKey,
+                    'value' => $metadataValue,
                 ];
 
-                $this->getLogger()->info(sprintf('Adding tag: %s for table: %s', $tableTag, $tableName));
+                $this->getLogger()->info(
+                    sprintf(
+                        'Adding metadata key: %s value: %s for table: %s',
+                        $metadataKey,
+                        $metadataValue,
+                        $tableName
+                    )
+                );
 
                 try {
                     file_put_contents(

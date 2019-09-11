@@ -13,12 +13,12 @@ class Config extends BaseConfig
         return $this->getValue(['parameters', 'metadata_key']);
     }
 
-    public function isTableTaggable(string $tableName): bool
+    public function hasTableMetadata(string $tableName): bool
     {
         return in_array($tableName, $this->getValue(['parameters', 'tables']));
     }
 
-    public function getTableTag(string $tableName): string
+    public function getMetadataValue(string $tableName): string
     {
         $vendor = $this->getValue(['parameters', 'vendor']);
         $app = $this->getValue(['parameters', 'app']);
