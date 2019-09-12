@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace MyComponent;
+namespace Keboola\AddMetadataProcessor;
 
 use Keboola\Component\BaseComponent;
 use Keboola\Component\JsonHelper;
@@ -30,12 +30,11 @@ class Component extends BaseComponent
             $tableName = str_replace('.manifest', '', $manifestFile->getBasename());
             $this->getLogger()->debug(sprintf('Found manifest file: %s', $manifestFile->getBasename()));
 
-            if ($config->hasTableMetadata($tableName)) {
+            $metadata = $config->getMetadataForTable($tableName);
+
+            if (null !== $metadata) {
                 // read manifest
                 $manifest = $manifestManager->getTableManifest($tableName);
-
-                $metadataValue = $config->getMetadataValue($tableName);
-                $metadataKey = $config->getMetadataKey();
 
                 if (!array_key_exists('metadata', $manifest)) {
                     $manifest['metadata'] = [];
@@ -43,15 +42,15 @@ class Component extends BaseComponent
 
                 // add tag entry to metadata
                 $manifest['metadata'][] = [
-                    'key' => $metadataKey,
-                    'value' => $metadataValue,
+                    'key' => $metadata['key'],
+                    'value' => $metadata['value'],
                 ];
 
                 $this->getLogger()->info(
                     sprintf(
                         'Adding metadata key: %s value: %s for table: %s',
-                        $metadataKey,
-                        $metadataValue,
+                        $metadata['key'],
+                        $metadata['value'],
                         $tableName
                     )
                 );

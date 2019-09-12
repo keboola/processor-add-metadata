@@ -2,26 +2,22 @@
 
 declare(strict_types=1);
 
-namespace MyComponent;
+namespace Keboola\AddMetadataProcessor;
 
 use Keboola\Component\Config\BaseConfig;
 
 class Config extends BaseConfig
 {
-    public function getMetadataKey(): string
+    public function getMetadataForTable(string $tableName): ?array
     {
-        return $this->getValue(['parameters', 'metadata_key']);
-    }
+        $metadata = $this->getValue(['parameters', 'metadata']);
 
-    public function hasTableMetadata(string $tableName): bool
-    {
-        return in_array($tableName, $this->getValue(['parameters', 'tables']));
-    }
+        foreach ($metadata as $meta) {
+            if ($meta['table'] === $tableName) {
+                return $meta;
+            }
+        }
 
-    public function getMetadataValue(string $tableName): string
-    {
-        $vendor = $this->getValue(['parameters', 'vendor']);
-        $app = $this->getValue(['parameters', 'app']);
-        return sprintf('bdm.%s.%s.%s', $vendor, $app, $tableName);
+        return null;
     }
 }

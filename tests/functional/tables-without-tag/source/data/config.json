@@ -1,7 +1,5 @@
 {
     "parameters": {
-        "vendor": "keboola",
-        "app": "test-app",
-        "tables": []
+        "metadata": []
     }
 }

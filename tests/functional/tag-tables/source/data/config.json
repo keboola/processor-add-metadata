@@ -1,9 +1,16 @@
 {
     "parameters": {
-        "vendor": "keboola",
-        "app": "test-app",
-        "tables": [
-            "test-table", "table2"
+        "metadata": [
+            {
+                "table": "table2",
+                "key": "bdm.scaffold.table.tag",
+                "value": "bdm.keboola.test-app.table2"
+            },
+            {
+                "table": "test-table",
+                "key": "bdm.scaffold.table.tag",
+                "value": "bdm.keboola.test-app.test-table"
+            }
         ]
     }
 }
