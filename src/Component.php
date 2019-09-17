@@ -30,9 +30,9 @@ class Component extends BaseComponent
             $tableName = str_replace('.manifest', '', $manifestFile->getBasename());
             $this->getLogger()->debug(sprintf('Found manifest file: %s', $manifestFile->getBasename()));
 
-            $metadata = $config->getMetadataForTable($tableName);
+            $metadataList = $config->getMetadataForTable($tableName);
 
-            if (null !== $metadata) {
+            if (null !== $metadataList) {
                 // read manifest
                 $manifest = $manifestManager->getTableManifest($tableName);
 
@@ -40,20 +40,22 @@ class Component extends BaseComponent
                     $manifest['metadata'] = [];
                 }
 
-                // add tag entry to metadata
-                $manifest['metadata'][] = [
-                    'key' => $metadata['key'],
-                    'value' => $metadata['value'],
-                ];
+                foreach ($metadataList as $metadataPair) {
+                    // add tag entry to metadata
+                    $manifest['metadata'][] = [
+                        'key' => $metadataPair['key'],
+                        'value' => $metadataPair['value'],
+                    ];
 
-                $this->getLogger()->info(
-                    sprintf(
-                        'Adding metadata key: %s value: %s for table: %s',
-                        $metadata['key'],
-                        $metadata['value'],
-                        $tableName
-                    )
-                );
+                    $this->getLogger()->debug(
+                        sprintf(
+                            'Adding metadata key: %s value: %s for table: %s',
+                            $metadataPair['key'],
+                            $metadataPair['value'],
+                            $tableName
+                        )
+                    );
+                }
 
                 try {
                     JsonHelper::writeFile($outTablesFolder . '/' . $manifestFile->getBasename(), $manifest);

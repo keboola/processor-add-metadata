@@ -10,11 +10,11 @@ class Config extends BaseConfig
 {
     public function getMetadataForTable(string $tableName): ?array
     {
-        $metadata = $this->getValue(['parameters', 'metadata']);
+        $tables = $this->getValue(['parameters', 'tables']);
 
-        foreach ($metadata as $meta) {
-            if ($meta['table'] === $tableName) {
-                return $meta;
+        foreach ($tables as $table) {
+            if ($table['table'] === $tableName) {
+                return $table['metadata'];
             }
         }
 
