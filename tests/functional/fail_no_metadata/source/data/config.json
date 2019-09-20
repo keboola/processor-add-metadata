@@ -1,0 +1,10 @@
+{
+    "parameters": {
+        "tables": [
+            {
+                "table": "table",
+                "metadata": []
+            }
+        ]
+    }
+}

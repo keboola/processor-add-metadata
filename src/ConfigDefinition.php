@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace MyComponent;
+namespace Keboola\AddMetadataProcessor;
 
 use Keboola\Component\Config\BaseConfigDefinition;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
@@ -16,8 +16,23 @@ class ConfigDefinition extends BaseConfigDefinition
         /** @noinspection NullPointerExceptionInspection */
         $parametersNode
             ->children()
-                ->scalarNode('foo')
-                    ->defaultValue('baz')
+                ->arrayNode('tables')
+                    ->requiresAtLeastOneElement()
+                    ->arrayPrototype()
+                        ->children()
+                            ->scalarNode('table')->isRequired()->end()
+                            ->arrayNode('metadata')
+                                ->requiresAtLeastOneElement()
+                                ->isRequired()
+                                ->arrayPrototype()
+                                    ->children()
+                                        ->scalarNode('key')->isRequired()->end()
+                                        ->scalarNode('value')->isRequired()->end()
+                                    ->end()
+                                ->end()
+                            ->end()
+                        ->end()
+                    ->end()
                 ->end()
             ->end()
         ;

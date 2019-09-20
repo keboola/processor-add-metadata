@@ -2,15 +2,29 @@
 
 declare(strict_types=1);
 
-namespace MyComponent;
+namespace Keboola\AddMetadataProcessor;
 
 use Keboola\Component\Config\BaseConfig;
 
 class Config extends BaseConfig
 {
-    // @todo implement your custom getters
-    public function getFoo(): string
+    public function getTablesNameList(): array
     {
-        return $this->getValue(['parameters', 'foo']);
+        return array_map(function ($table) {
+            return $table['table'];
+        }, $this->getValue(['parameters', 'tables']));
+    }
+
+    public function getMetadataForTable(string $tableName): array
+    {
+        $tables = $this->getValue(['parameters', 'tables']);
+
+        foreach ($tables as $table) {
+            if ($table['table'] === $tableName) {
+                return $table['metadata'];
+            }
+        }
+
+        return [];
     }
 }
