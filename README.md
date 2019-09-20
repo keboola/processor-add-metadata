@@ -10,7 +10,7 @@ The configuration requires following properties:
 
 - `tables` - array (required): list of objects including table name and metadata to add
     - `table` - string (required): target table name
-    - `metadata` - array (required): list of metadata key => value pairs
+    - `metadata` - array (required): list of metadata key and value pairs
         - `key` - string (required): metadata key
         - `value` - string (required): metadata value for key
 
@@ -43,7 +43,7 @@ Clone this repository and init the workspace with following command:
 
 ```
 git clone https://github.com/keboola/processor-add-metadata
-cd my-component
+cd processor-add-metadata
 docker-compose build
 docker-compose run --rm dev composer install --no-scripts
 ```

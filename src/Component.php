@@ -36,16 +36,13 @@ class Component extends BaseComponent
                 // read manifest
                 $manifest = $manifestManager->getTableManifest($tableName);
 
-                if (!array_key_exists('metadata', $manifest)) {
+                if (empty($manifest['metadata'])) {
                     $manifest['metadata'] = [];
                 }
 
                 foreach ($metadataList as $metadataPair) {
-                    // add tag entry to metadata
-                    $manifest['metadata'][] = [
-                        'key' => $metadataPair['key'],
-                        'value' => $metadataPair['value'],
-                    ];
+                    // add entry to metadata
+                    $manifest['metadata'][] = $metadataPair;
 
                     $this->getLogger()->debug(
                         sprintf(
@@ -64,7 +61,6 @@ class Component extends BaseComponent
                         sprintf('Failed to create manifest: %s', $e->getMessage())
                     );
                 }
-                $fs->remove($manifestFile->getPathname());
             } else {
                 $this->getLogger()->info(
                     sprintf('Move manifest file: %s without tagging', $manifestFile->getBasename())

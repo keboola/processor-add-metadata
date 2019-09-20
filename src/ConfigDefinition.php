@@ -17,10 +17,12 @@ class ConfigDefinition extends BaseConfigDefinition
         $parametersNode
             ->children()
                 ->arrayNode('tables')
+                    ->requiresAtLeastOneElement()
                     ->arrayPrototype()
                         ->children()
                             ->scalarNode('table')->isRequired()->end()
                             ->arrayNode('metadata')
+                                ->requiresAtLeastOneElement()
                                 ->isRequired()
                                 ->arrayPrototype()
                                     ->children()
