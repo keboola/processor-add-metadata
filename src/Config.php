@@ -8,6 +8,13 @@ use Keboola\Component\Config\BaseConfig;
 
 class Config extends BaseConfig
 {
+    public function getTablesNameList(): array
+    {
+        return array_map(function ($table) {
+            return $table['table'];
+        }, $this->getValue(['parameters', 'tables']));
+    }
+
     public function getMetadataForTable(string $tableName): array
     {
         $tables = $this->getValue(['parameters', 'tables']);
