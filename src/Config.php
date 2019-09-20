@@ -8,7 +8,7 @@ use Keboola\Component\Config\BaseConfig;
 
 class Config extends BaseConfig
 {
-    public function getMetadataForTable(string $tableName): ?array
+    public function getMetadataForTable(string $tableName): array
     {
         $tables = $this->getValue(['parameters', 'tables']);
 
@@ -18,6 +18,6 @@ class Config extends BaseConfig
             }
         }
 
-        return null;
+        return [];
     }
 }
