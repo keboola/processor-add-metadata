@@ -6,29 +6,12 @@ namespace Keboola\AddMetadataProcessor;
 
 use Keboola\Component\BaseComponent;
 use Keboola\Component\JsonHelper;
-use Keboola\Component\UserException;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Serializer\Exception\UnexpectedValueException;
 
 class Component extends BaseComponent
 {
-    private function checkExistingManifestFiles(Config $config, string $inTablesFolder): void
-    {
-        $fs = new Filesystem();
-        $tables = $config->getTablesNameList();
-
-        foreach ($tables as $table) {
-            if (!$fs->exists($inTablesFolder . '/' . $table . '.manifest')) {
-                throw new UserException(sprintf(
-                    'Table %s was configured but %s.manifest file was not found.'
-                    . 'Check if processor-create-manifest is configured before processor-add-metadata.',
-                    $table,
-                    $table
-                ));
-            }
-        }
-    }
 
     protected function run(): void
     {
@@ -39,7 +22,6 @@ class Component extends BaseComponent
         $outTablesFolder = $dataFolder . '/out/tables';
 
         $this->moveNotManifestFiles($inTablesFolder, $outTablesFolder);
-        $this->checkExistingManifestFiles($config, $inTablesFolder);
 
         $manifestManager = $this->getManifestManager();
         $fs = new Filesystem();
