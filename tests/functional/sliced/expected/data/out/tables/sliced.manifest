@@ -1,1 +1,1 @@
-{"delimiter":",","enclosure":"\"","primary_key":[],"incremental":false,"columns":["col1","col2"],"metadata":[{"key":"bdm.scaffold.table.tag","value":"bdm.keboola.test-app.sliced"}]}
+{"incremental":false,"delimiter":",","enclosure":"\"","metadata":[{"key":"bdm.scaffold.table.tag","value":"bdm.keboola.test-app.sliced"}],"columns":["col1","col2"],"column_metadata":{"col1":[{"key":"KBC.datatype.nullable","value":true}],"col2":[{"key":"KBC.datatype.nullable","value":true}]}}

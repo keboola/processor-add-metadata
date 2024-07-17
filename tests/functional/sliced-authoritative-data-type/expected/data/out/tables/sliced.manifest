@@ -1,0 +1,1 @@
+{"incremental":false,"delimiter":",","enclosure":"\"","manifest_type":"output","table_metadata":{"bdm.scaffold.table.tag":"bdm.keboola.test-app.sliced"},"schema":[{"nullable":true,"primary_key":false,"name":"col1"},{"nullable":true,"primary_key":false,"name":"col2"}]}
