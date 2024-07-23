@@ -1,7 +1,5 @@
 # Processor add metadata
 
-[![Build Status](https://travis-ci.com/keboola/processor-add-metadata.svg?branch=master)](https://travis-ci.com/keboola/processor-add-metadata)
-
 Processor for adding specified metadata to table manifest file
 
 # Usage
