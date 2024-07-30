@@ -1,0 +1,15 @@
+{
+    "parameters": {
+        "tables": [
+            {
+                "table": "sliced",
+                "metadata": [
+                    {
+                        "key": "bdm.scaffold.table.tag",
+                        "value": "bdm.keboola.test-app.sliced"
+                    }
+                ]
+            }
+        ]
+    }
+}

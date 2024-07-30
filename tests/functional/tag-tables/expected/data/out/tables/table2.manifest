@@ -1,1 +1,1 @@
-{"delimiter":",","enclosure":"\"","primary_key":[],"incremental":false,"columns":["bottle"],"metadata":[{"key":"bdm.scaffold.table.tag","value":"bdm.keboola.test-app.table2"}]}
+{"incremental":false,"delimiter":",","enclosure":"\"","metadata":[{"key":"bdm.scaffold.table.tag","value":"bdm.keboola.test-app.table2"}],"columns":["bottle"],"column_metadata":{"bottle":[{"key":"KBC.datatype.nullable","value":true}]}}

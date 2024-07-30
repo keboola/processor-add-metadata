@@ -7,6 +7,7 @@ namespace Keboola\AddMetadataProcessor;
 use Keboola\Component\BaseComponent;
 use Keboola\Component\JsonHelper;
 use Keboola\Component\UserException;
+use RuntimeException;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Serializer\Exception\UnexpectedValueException;
@@ -24,7 +25,7 @@ class Component extends BaseComponent
                     'Table %s was configured but %s.manifest file was not found.'
                     . 'Check if processor-create-manifest is configured before processor-add-metadata.',
                     $table,
-                    $table
+                    $table,
                 ));
             }
         }
@@ -54,7 +55,7 @@ class Component extends BaseComponent
 
             if (empty($metadataList)) {
                 $this->getLogger()->notice(
-                    sprintf('Move manifest file: %s without adding metadata', $manifestFile->getBasename())
+                    sprintf('Move manifest file: %s without adding metadata', $manifestFile->getBasename()),
                 );
                 $fs->rename($manifestFile->getPathname(), $outTablesFolder . '/' . $manifestFile->getBasename());
                 continue;
@@ -62,33 +63,41 @@ class Component extends BaseComponent
 
             // read manifest
             $manifest = $manifestManager->getTableManifest($tableName);
+            $metadata = $manifest->getTableMetadata();
 
-            if (empty($manifest['metadata'])) {
-                $manifest['metadata'] = [];
+            if (empty($metadata) === true) {
+                $metadata = [];
             }
 
+            /** @var array{key: string, value: string} $metadataPair */
             foreach ($metadataList as $metadataPair) {
                 // add entry to metadata
-                $manifest['metadata'][] = $metadataPair;
+                $metadata[$metadataPair['key']] = $metadataPair['value'];
 
                 $this->getLogger()->info(
                     sprintf(
                         'Adding metadata key: %s value: %s for table: %s',
                         $metadataPair['key'],
                         $metadataPair['value'],
-                        $tableName
-                    )
+                        $tableName,
+                    ),
                 );
             }
 
+            $manifest->setTableMetadata($metadata);
+
             try {
                 $this->getLogger()->notice(
-                    sprintf('Saving updated manifest file: %s', $manifestFile->getBasename())
+                    sprintf('Saving updated manifest file: %s', $manifestFile->getBasename()),
                 );
-                JsonHelper::writeFile($outTablesFolder . '/' . $manifestFile->getBasename(), $manifest);
+                $manifestManager->writeTableManifest(
+                    $manifestFile->getBasename(),
+                    $manifest,
+                    $config->getDataTypeSupport()->usingLegacyManifest(),
+                );
             } catch (UnexpectedValueException $e) {
-                throw new \RuntimeException(
-                    sprintf('Failed to create manifest: %s', $e->getMessage())
+                throw new RuntimeException(
+                    sprintf('Failed to create manifest: %s', $e->getMessage()),
                 );
             }
         }
