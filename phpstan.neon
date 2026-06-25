@@ -1,3 +1,5 @@
 parameters:
     ignoreErrors:
-        - '#Cannot call method arrayNode\(\) on Symfony\\Component\\Config\\Definition\\Builder\\NodeParentInterface\|null.#'
+        # Symfony Config fluent builder: phpstan can't follow ->children()->arrayNode() typing.
+        # The message changed with newer symfony/config (php-component ^11), so match the current form.
+        - '#Call to an undefined method Symfony\\Component\\Config\\Definition\\Builder\\NodeParentInterface::arrayNode\(\)#'
